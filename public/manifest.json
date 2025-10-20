@@ -10,7 +10,8 @@
   "background": {
     "scripts": [
       "background/main.js"
-    ]
+    ],
+    "type": "module"
   },
   "browser_action": {
     "default_popup": "src/popup/index.html",

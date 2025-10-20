@@ -32,6 +32,7 @@ export async function getReadPages(): Promise<ReadPage[]> {
  * @description Добавляет страницу
  */
 export async function addReadPage(page: ReadPage) {
+  console.log('awdawd')
   const db = await dbPromise
   console.log('db', db)
   await db.put(STORE_NAME, page)
