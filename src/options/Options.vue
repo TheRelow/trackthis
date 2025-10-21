@@ -14,17 +14,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { ReadPage } from '../types/page'
-import { getReadPages, clearReadPages } from '../utils/db'
+import type { Page } from '../types/page'
+import { getPages, clearPages } from '../utils/db'
 
-const pages = ref<ReadPage[]>([])
+const pages = ref<Page[]>([])
 
 async function loadPages() {
-  pages.value = await getReadPages()
+  pages.value = await getPages()
 }
 
 async function clearAll() {
-  await clearReadPages()
+  await clearPages()
   pages.value = []
 }
 

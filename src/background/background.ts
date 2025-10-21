@@ -1,5 +1,5 @@
-import type { ReadPage } from '../types/page'
-import { addReadPage, clearReadPages } from '../utils/db'
+import type { Page } from '../types/page'
+import { addPage, clearPages } from '../utils/db'
 
 console.log('zxcxzcxzczxc')
 
@@ -10,14 +10,14 @@ async function markPageAsRead(): Promise<void> {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
   if (!tab?.url) return
 
-  const page: ReadPage = {
+  const page: Page = {
     url: tab.url,
     isRead: true,
     title: tab.title ?? tab.url,
     addedAt: Math.floor(Date.now() / 1000)
   }
 
-  await addReadPage(page)
+  await addPage(page)
 }
 
 /**
@@ -30,7 +30,7 @@ browser.runtime.onMessage.addListener(async (msg) => {
       await markPageAsRead()
       return
     case 'clearAll':
-      await clearReadPages()
+      await clearPages()
       return
   }
 })

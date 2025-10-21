@@ -1,5 +1,5 @@
 import { openDB, DBSchema } from 'idb'
-import type { ReadPage } from '../types/page'
+import type { Page } from '../types/page'
 
 export interface Domain {
   name: string
@@ -7,9 +7,9 @@ export interface Domain {
 }
 
 interface TrackThisDB extends DBSchema {
-  readPages: {
+  pages: {
     key: string // URL
-    value: ReadPage
+    value: Page
     indexes: { 'by-date': number }
   }
   domains: {
@@ -20,24 +20,14 @@ interface TrackThisDB extends DBSchema {
 }
 
 const DB_NAME = 'trackthis-db'
-const STORE_READPAGES = 'readPages'
+const STORE_PAGES = 'pages'
 const STORE_DOMAINS = 'domains'
-const DB_VERSION = 2
+const DB_VERSION = 3
 
 let dbPromise = openDB<TrackThisDB>(DB_NAME, DB_VERSION, {
-  upgrade(db, oldVersion) {
-    switch (oldVersion) {
-      case 0:
-        {
-          const store = db.createObjectStore(STORE_READPAGES, { keyPath: 'url' })
-          store.createIndex('by-date', 'addedAt')
-        }
-      case 1:
-        {
-          const store = db.createObjectStore(STORE_DOMAINS, { keyPath: 'name' })
-          store.createIndex('by-date', 'addedAt')
-        }
-    }
+  async upgrade(db) {
+    db.createObjectStore(STORE_PAGES, { keyPath: 'url' }).createIndex('by-date', 'addedAt')
+    db.createObjectStore(STORE_DOMAINS, { keyPath: 'name' }).createIndex('by-date', 'addedAt')
   }
 })
 
@@ -92,19 +82,19 @@ export function createStoreHandlers<T, K = string>(storeName: string) {
   }
 }
 
-const readPageHandlers = createStoreHandlers<ReadPage>('readPages')
+const pageHandlers = createStoreHandlers<Page>('pages')
 const domainHandlers = createStoreHandlers<Domain>('domains') // TODO: сюда бы константы
 
-export const getReadPages = readPageHandlers.getAll
-export const addReadPage = readPageHandlers.putOne
-export const clearReadPages = readPageHandlers.clearAll
+export const getPages = pageHandlers.getAll
+export const addPage = pageHandlers.putOne
+export const clearPages = pageHandlers.clearAll
 
 /**
  * @description Фабрика для всех репозиториев в базе
  */
 // export async function createRepositories(db?: IDBPDatabase<TrackThisDB>) {
 //   return {
-//     readPages: createStoreHandlers<ReadPage>('readPages'),
+//     pages: createStoreHandlers<Page>('pages'),
 //     domains: createStoreHandlers<Domain>('domains')
 //   }
 // }
