@@ -4,3 +4,8 @@ export interface Page {
   isRead: boolean
   addedAt: number // unix, секунды
 }
+
+export interface Domain {
+  name: string
+  addedAt: number
+}

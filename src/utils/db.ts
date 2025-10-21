@@ -1,10 +1,5 @@
 import { openDB, DBSchema } from 'idb'
-import type { Page } from '../types/page'
-
-export interface Domain {
-  name: string
-  addedAt: number
-}
+import type { Page, Domain } from '../types/page'
 
 interface TrackThisDB extends DBSchema {
   pages: {
@@ -89,12 +84,5 @@ export const getPages = pageHandlers.getAll
 export const addPage = pageHandlers.putOne
 export const clearPages = pageHandlers.clearAll
 
-/**
- * @description Фабрика для всех репозиториев в базе
- */
-// export async function createRepositories(db?: IDBPDatabase<TrackThisDB>) {
-//   return {
-//     pages: createStoreHandlers<Page>('pages'),
-//     domains: createStoreHandlers<Domain>('domains')
-//   }
-// }
+export const getDomains = domainHandlers.getAll
+export const addDomain = domainHandlers.putOne
