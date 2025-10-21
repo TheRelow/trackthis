@@ -1,49 +1,110 @@
 import { openDB, DBSchema } from 'idb'
 import type { ReadPage } from '../types/page'
 
+export interface Domain {
+  name: string
+  addedAt: number
+}
+
 interface TrackThisDB extends DBSchema {
   readPages: {
     key: string // URL
     value: ReadPage
     indexes: { 'by-date': number }
   }
+  domains: {
+    key: string
+    value: Domain
+    indexes: { 'by-date': number }
+  }
 }
 
 const DB_NAME = 'trackthis-db'
-const STORE_NAME = 'readPages'
-const DB_VERSION = 1
+const STORE_READPAGES = 'readPages'
+const STORE_DOMAINS = 'domains'
+const DB_VERSION = 2
 
 let dbPromise = openDB<TrackThisDB>(DB_NAME, DB_VERSION, {
-  upgrade(db) {
-    const store = db.createObjectStore(STORE_NAME, { keyPath: 'url' })
-    store.createIndex('by-date', 'addedAt')
+  upgrade(db, oldVersion) {
+    switch (oldVersion) {
+      case 0:
+        {
+          const store = db.createObjectStore(STORE_READPAGES, { keyPath: 'url' })
+          store.createIndex('by-date', 'addedAt')
+        }
+      case 1:
+        {
+          const store = db.createObjectStore(STORE_DOMAINS, { keyPath: 'name' })
+          store.createIndex('by-date', 'addedAt')
+        }
+    }
   }
 })
 
 /**
- * @description Получает все страницы
+ * @description Универсальная фабрика CRUD-методов для указанного стора
+ * @template T Тип значения, хранимого в store
+ * @template K Тип ключа для store
  */
-export async function getReadPages(): Promise<ReadPage[]> {
-  const db = await dbPromise
-  return db.getAll(STORE_NAME)
+export function createStoreHandlers<T, K = string>(storeName: string) {
+  return {
+    /**
+     * @description Получает все элементы стора
+     */
+    async getAll(): Promise<T[]> {
+      const db = await dbPromise
+      return db.getAll(storeName)
+    },
+
+    /**
+     * @description Получает один элемент по ключу
+     */
+    async getOne(key: K): Promise<T | undefined> {
+      const db = await dbPromise
+      return db.get(storeName, key)
+    },
+
+    /**
+     * @description Добавляет или обновляет элемент
+     */
+    async putOne(value: T) {
+      const db = await dbPromise
+      await db.put(storeName, value)
+    },
+
+    /**
+     * @description Удаляет элемент по ключу
+     */
+    async deleteOne(key: K) {
+      const db = await dbPromise
+      await db.delete(storeName, key)
+    },
+
+    /**
+     * @description Очищает весь store
+     */
+    async clearAll() {
+      const db = await dbPromise
+      const tx = db.transaction(storeName, 'readwrite')
+      await tx.store.clear()
+      await tx.done
+    }
+  }
 }
 
-/**
- * @description Добавляет страницу
- */
-export async function addReadPage(page: ReadPage) {
-  console.log('awdawd')
-  const db = await dbPromise
-  console.log('db', db)
-  await db.put(STORE_NAME, page)
-}
+const readPageHandlers = createStoreHandlers<ReadPage>('readPages')
+const domainHandlers = createStoreHandlers<Domain>('domains') // TODO: сюда бы константы
+
+export const getReadPages = readPageHandlers.getAll
+export const addReadPage = readPageHandlers.putOne
+export const clearReadPages = readPageHandlers.clearAll
 
 /**
- * @description Удаляет все
+ * @description Фабрика для всех репозиториев в базе
  */
-export async function clearReadPages() {
-  const db = await dbPromise
-  const tx = db.transaction(STORE_NAME, 'readwrite')
-  await tx.store.clear()
-  await tx.done
-}
+// export async function createRepositories(db?: IDBPDatabase<TrackThisDB>) {
+//   return {
+//     readPages: createStoreHandlers<ReadPage>('readPages'),
+//     domains: createStoreHandlers<Domain>('domains')
+//   }
+// }
