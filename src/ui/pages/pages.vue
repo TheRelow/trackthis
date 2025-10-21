@@ -1,21 +1,7 @@
-<template>
-  <div class="options">
-    <h2>📚 Прочитанные страницы</h2>
-    <ul v-if="pages.length">
-      <li v-for="page in pages" :key="page.url">
-        <a :href="page.url" target="_blank">{{ page.title }}</a>
-        <time>{{ formatTime(page.addedAt) }}</time>
-      </li>
-    </ul>
-    <p v-else>Нет сохранённых страниц</p>
-    <button @click="clearAll">Очистить всё</button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { Page } from '../types/page'
-import { getPages, clearPages } from '../utils/db'
+import type { Page } from '../../types/page'
+import { getPages, clearPages } from '../../utils/db'
 
 const pages = ref<Page[]>([])
 
@@ -35,13 +21,22 @@ function formatTime(unixSec: number): string {
 onMounted(loadPages)
 </script>
 
+<template>
+  <div class="options">
+    <h2>📚 Прочитанные страницы</h2>
+    <ul v-if="pages.length">
+      <li v-for="page in pages" :key="page.url">
+        <a :href="page.url" target="_blank">{{ page.title }}</a>
+        <time>{{ formatTime(page.addedAt) }}</time>
+      </li>
+    </ul>
+    <p v-else>Нет сохранённых страниц</p>
+    <button @click="clearAll">Очистить всё</button>
+  </div>
+</template>
+
 <style scoped lang="scss">
 .options {
-  font-family: sans-serif;
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-
   ul {
     list-style: none;
     padding: 0;
