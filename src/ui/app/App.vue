@@ -21,6 +21,20 @@
   background-color: #ccc;
 }
 
+.header__menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 600px;
+  height: 60px;
+
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+}
+
 .main {
   padding: 20px;
   max-width: 600px;

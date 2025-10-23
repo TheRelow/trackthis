@@ -1,5 +1,5 @@
 import { openDB, DBSchema } from 'idb'
-import type { Page, Domain } from '../types/page'
+import type { Page, Domain } from '@types/page'
 
 interface TrackThisDB extends DBSchema {
   pages: {
@@ -85,4 +85,5 @@ export const addPage = pageHandlers.putOne
 export const clearPages = pageHandlers.clearAll
 
 export const getDomains = domainHandlers.getAll
+export const getDomain = domainHandlers.getOne
 export const addDomain = domainHandlers.putOne

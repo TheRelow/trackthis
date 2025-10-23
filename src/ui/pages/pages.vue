@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Page } from '../../types/page'
-import { getPages, clearPages } from '../../utils/db'
+import {onMounted, ref} from 'vue'
+import type {Domain, Page} from '@types/page'
+import {clearPages, getDomain, getPages} from '@utils/db'
 
 const pages = ref<Page[]>([])
+const domains = ref<Record<string, Domain>>({})
 
 async function loadPages() {
   pages.value = await getPages()
+
+  const domainEntries = await Promise.all(
+    [...new Set(pages.value.map(p => p.domain))].map(async (name) => {
+      const domain = await getDomain(name)
+      return domain ? [domain.name, domain] as const : null
+    })
+  )
+
+  domains.value = Object.fromEntries(
+    domainEntries.filter((entry): entry is readonly [string, Domain] => entry != null)
+  )
 }
 
 async function clearAll() {
@@ -24,14 +36,16 @@ onMounted(loadPages)
 <template>
   <div class="options">
     <h2>📚 Прочитанные страницы</h2>
-    <ul v-if="pages.length">
-      <li v-for="page in pages" :key="page.url">
-        <a :href="page.url" target="_blank">{{ page.title }}</a>
-        <time>{{ formatTime(page.addedAt) }}</time>
-      </li>
-    </ul>
+    <div v-if="pages.length">
+      <ul>
+        <li v-for="page in pages" :key="page.url">
+          <a :href="page.url" target="_blank" class="domain-link"><img :src="domains?.[page.domain]?.icon" :alt="page.title">{{ page.title }}</a>
+          <time>{{ formatTime(page.addedAt) }}</time>
+        </li>
+      </ul>
+      <button @click="clearAll">Очистить всё</button>
+    </div>
     <p v-else>Нет сохранённых страниц</p>
-    <button @click="clearAll">Очистить всё</button>
   </div>
 </template>
 
@@ -55,6 +69,7 @@ onMounted(loadPages)
       }
 
       time {
+        padding-left: 28px;
         display: block;
         font-size: 0.9em;
         color: #888;

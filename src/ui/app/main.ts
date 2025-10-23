@@ -28,6 +28,7 @@ import '@fontsource/roboto/500-italic.css'
 import '@fontsource/roboto/700-italic.css'
 import '@fontsource/roboto/900-italic.css'
 
+import '@/app/styles.scss'
 
 const vuetify = createVuetify({
   components,

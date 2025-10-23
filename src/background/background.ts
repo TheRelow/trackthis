@@ -1,5 +1,5 @@
-import type { Page, Domain } from '../types/page'
-import { addPage, clearPages, getDomains, addDomain } from '../utils/db'
+import type { Page, Domain } from '@types/page'
+import { addPage, clearPages, getDomains, addDomain } from '@utils/db'
 
 function getDomain(str: string): string {
   const match = str.match(/^(?:https?:\/\/)?(?:www\.)?([^\/\n]+)/i)
@@ -20,13 +20,15 @@ async function markPageAsRead(): Promise<void> {
   if (!domains.some((d: Domain) => d.name === currentDomain)) {
     await addDomain({
       name: currentDomain,
-      addedAt
+      addedAt,
+      icon: tab.favIconUrl
     })
   }
 
   const page: Page = {
     url: tab.url,
     isRead: true,
+    domain: currentDomain,
     title: tab.title ?? tab.url,
     addedAt
   }
