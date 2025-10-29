@@ -1,9 +1,9 @@
 import { openDB, DBSchema } from 'idb'
-import type { Page, Domain } from '@types/page'
+import type { Page, Domain, PagePack } from '@types/page'
 
 interface TrackThisDB extends DBSchema {
   pages: {
-    key: string // URL
+    key: string
     value: Page
     indexes: { 'by-date': number }
   }
@@ -12,17 +12,24 @@ interface TrackThisDB extends DBSchema {
     value: Domain
     indexes: { 'by-date': number }
   }
+  pagePacks: {
+    key: string
+    value: PagePack
+    indexes: { 'by-date': number }
+  }
 }
 
 const DB_NAME = 'trackthis-db'
 const STORE_PAGES = 'pages'
 const STORE_DOMAINS = 'domains'
+const STORE_PAGEPACKS = 'pagePacks'
 const DB_VERSION = 3
 
 let dbPromise = openDB<TrackThisDB>(DB_NAME, DB_VERSION, {
   async upgrade(db) {
     db.createObjectStore(STORE_PAGES, { keyPath: 'url' }).createIndex('by-date', 'addedAt')
     db.createObjectStore(STORE_DOMAINS, { keyPath: 'name' }).createIndex('by-date', 'addedAt')
+    db.createObjectStore(STORE_PAGEPACKS, { keyPath: 'name' }).createIndex('by-date', 'addedAt')
   }
 })
 
@@ -77,8 +84,9 @@ export function createStoreHandlers<T, K = string>(storeName: string) {
   }
 }
 
-const pageHandlers = createStoreHandlers<Page>('pages')
-const domainHandlers = createStoreHandlers<Domain>('domains') // TODO: сюда бы константы
+const pageHandlers = createStoreHandlers<Page>(STORE_PAGES)
+const pagePackHandlers = createStoreHandlers<Page>(STORE_PAGEPACKS)
+const domainHandlers = createStoreHandlers<Domain>(STORE_DOMAINS)
 
 export const getPages = pageHandlers.getAll
 export const addPage = pageHandlers.putOne

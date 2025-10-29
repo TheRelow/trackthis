@@ -1,7 +1,7 @@
 <template>
   <div class="popup">
     <h3>📖 TrackThis</h3>
-    <button @click="markAsRead">Пометить как прочитанную</button>
+    <button @click="markAsRead" style="background: #19D24D;">Пометить как прочитанную</button>
     <button @click="openList">Открыть список</button>
     <button @click="clearAll">Очистить всё</button>
     <p class="msg">{{ message }}</p>

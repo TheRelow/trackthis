@@ -2,6 +2,7 @@
   <header class="header">
     <div class="container">
       <div class="header__menu">
+        <router-link to="/">Home</router-link>
         <router-link to="/pages">pages</router-link>
         <router-link to="/domains">domains</router-link>
       </div>
