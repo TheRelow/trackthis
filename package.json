@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch & web-ext run --source-dir dist --firefox=/home/relow/Programms/firefox-dev/firefox  --start-url about:debugging#/runtime/this-firefox",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -25,6 +25,7 @@
     "vite-plugin-vue-devtools": "^8.0.3",
     "vue": "^3.5.18",
     "vue-router": "^4.6.3",
-    "vuetify": "^3.10.5"
+    "vuetify": "^3.10.5",
+    "web-ext": "^9.1.0"
   }
 }

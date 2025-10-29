@@ -3,13 +3,9 @@
   "name": "TrackThis",
   "version": "1.0",
   "description": "Помечай страницы как прочитанные",
-  "permissions": [
-    "tabs"
-  ],
+  "permissions": [ "tabs" ],
   "background": {
-    "scripts": [
-      "background/main.js"
-    ],
+    "scripts": [ "background/main.js" ],
     "type": "module"
   },
   "browser_action": {
