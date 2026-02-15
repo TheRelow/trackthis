@@ -4,7 +4,7 @@
     "paths": {
       "@/*": ["src/ui/*"],
       "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"]
+      "@t/*": ["src/types/*"]
     },
     "target": "esnext",
     "module": "esnext",

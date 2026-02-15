@@ -1,28 +1,23 @@
-# TrackThis — исходники расширения
-
-Это шаблон расширения Firefox/Chrome на Vite + Vue 3 + TypeScript + SCSS
-Фичи:
-- <script setup lang="ts"> во Vue компонентах
-- хранение прочитанных страниц в browser.storage.local
-- timestamp в unix (секунды)
-- pnpm в качестве менеджера пакетов (указано в инструкциях)
-
-## Быстрый старт
-
-1. Установить pnpm, если ещё не установлен:
-   ```bash
-   npm install -g pnpm
-   ```
-2. Установить зависимости:
-   ```bash
-   pnpm install
-   ```
-3. Сборка:
-   ```bash
-   pnpm build
-   ```
-4. В Firefox открыть `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → выбрать `dist/manifest.json`
+# TrackThis
 
 ## Примечание
 - Положи свой логотип в `public/icon.png`
 - В `public/manifest.json` можно изменить поля name/description/version
+
+## What to do
+- [x] Domains
+- [x] Pages
+- [ ] Sort pages inside domain(detail)
+  - [ ] drag and drop
+  - [ ] sort in arr inside domain ~~or new IndexDB field~~(одна страница в теории крепится к разным pagePack, domain и везде сортировка своя)
+- [x] Page description
+- [ ] Cards
+  - [ ] crud base for everything
+  - [ ] Есть стрик. Каждый ответ влияет кэф стрика. Удача - сильный Х(карточка снова появится нескоро). Провал - режется кэф + очень скоро снова показывается карта
+  - [ ] режим повторения(прокидываются карточки, у которых пришло время)
+- [ ] Relate cards to pages
+  - [ ] прогресс изучения страниц, а из него складывается прогресс изучения какого-то epic
+- [ ] Добавление страниц
+  - [ ] Выбор выделением
+  - [ ] Далее попап с порядком и вопросом добавить в начало, конец или конкретное место
+- [ ] Придумать структуру, в которой не будет всё крепиться к домену(вариант - pagePack, но тут из названия прям очевидно что должна быть сслыка на какой- то источник)

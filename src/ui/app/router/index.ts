@@ -8,13 +8,35 @@ const routes = [
   },
   {
     path: '/pages',
-    name: 'Pages',
-    component: () => import('@/pages/pages.vue')
+    component: () => import('@/pages/pages.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Pages',
+        component: () => import('@/pages/pages/index.vue'),
+      },
+      {
+        path: ':id',
+        name: 'Detail page',
+        component: () => import('@/pages/pages/detail.vue'),
+      },
+    ]
   },
   {
     path: '/domains',
-    name: 'Domains',
-    component: () => import('@/pages/domains.vue')
+    component: () => import('@/pages/domains.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Domains',
+        component: () => import('@/pages/domains/index.vue'),
+      },
+      {
+        path: ':id',
+        name: 'Detail domain',
+        component: () => import('@/pages/domains/detail.vue'),
+      },
+    ]
   },
 ]
 

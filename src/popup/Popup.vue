@@ -3,7 +3,6 @@
     <h3>📖 TrackThis</h3>
     <button @click="markAsRead" style="background: #19D24D;">Пометить как прочитанную</button>
     <button @click="openList">Открыть список</button>
-    <button @click="clearAll">Очистить всё</button>
     <p class="msg">{{ message }}</p>
   </div>
 </template>
@@ -14,7 +13,7 @@ import { ref } from 'vue'
 const message = ref('')
 
 function sendMsg(type: string) {
-  browser.runtime.sendMessage({ type })
+  chrome.runtime.sendMessage({ type })
 }
 
 function markAsRead() {
@@ -30,7 +29,7 @@ function clearAll() {
 }
 
 function openList() {
-  browser.runtime.openOptionsPage()
+  chrome.runtime.openOptionsPage()
 }
 
 </script>
